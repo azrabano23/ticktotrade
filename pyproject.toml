@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ticktotrade"
+version = "0.1.0"
+description = "FPGA-style tick-to-trade pipeline (ITCH 5.0 over MoldUDP64 in, OUCH 4.2 out) in synthesizable Verilog, verified bit-exactly against a Python golden model with cycle-accurate latency measurement."
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.scripts]
+ticktotrade = "ticktotrade.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

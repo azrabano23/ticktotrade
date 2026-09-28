@@ -1,0 +1,724 @@
+{
+ "generated_utc": "2026-09-28T22:45:09Z",
+ "environment": {
+  "python": "3.11.15",
+  "iverilog": "Icarus Verilog version 12.0 (stable) ()"
+ },
+ "assumed_clocks_mhz": {
+  "156.25 MHz (10GbE 64-bit datapath)": 156.25,
+  "250 MHz": 250.0,
+  "322.27 MHz (10/25G GT-derived clock)": 322.265625
+ },
+ "design_params": {
+  "ORDER_BITS": 12,
+  "order_table_entries": 4096,
+  "DEPTH": 8,
+  "bus_bytes_per_cycle": 8,
+  "capture_bytes": 40,
+  "input_fifo": 8,
+  "order_queue": 8
+ },
+ "runs": {
+  "latency": {
+   "pass": true,
+   "errors": [],
+   "golden_counters": {
+    "msgs": 30000,
+    "pkts": 12109,
+    "parse_err": 0,
+    "relevant": 13129,
+    "collisions": 0,
+    "misses": 129,
+    "evictions": 239,
+    "drops": 280,
+    "orders": 564
+   },
+   "fidelity": {
+    "bbo_match_frac": 0.9674004113032219,
+    "book_updates": 13129,
+    "ref_live_orders_end": 68,
+    "hw_live_orders_end": 68
+   },
+   "message_mix": {
+    "A": 7791,
+    "B": 284,
+    "C": 935,
+    "D": 6118,
+    "E": 4246,
+    "F": 1404,
+    "H": 282,
+    "I": 268,
+    "J": 288,
+    "K": 290,
+    "L": 250,
+    "N": 287,
+    "P": 265,
+    "Q": 297,
+    "R": 6,
+    "S": 1,
+    "U": 3441,
+    "V": 270,
+    "W": 306,
+    "X": 2427,
+    "Y": 286,
+    "h": 258
+   },
+   "snapshots_compared": 13129,
+   "orders_compared": 564,
+   "latency_pkt_cycles": {
+    "min": 9,
+    "median": 15.0,
+    "max": 31,
+    "mean": 15.457,
+    "n": 564
+   },
+   "latency_msg_cycles": {
+    "min": 4,
+    "median": 4.0,
+    "max": 7,
+    "mean": 4.103,
+    "n": 564
+   },
+   "latency_msg_hist": {
+    "4": 511,
+    "5": 49,
+    "6": 3,
+    "7": 1
+   },
+   "throughput": {
+    "packets": 12109,
+    "bytes": 1200932,
+    "beats": 155840,
+    "window_cycles": 191270,
+    "sim_cycles": 191279,
+    "msgs_per_cycle": 0.1568,
+    "book_msgs_per_cycle": 0.0686,
+    "bus_utilization": 0.8148,
+    "fifo_max_occupancy": 1
+   },
+   "config": {
+    "messages": 30000,
+    "seed": 1,
+    "order_bits": 12,
+    "depth": 8,
+    "gap_prob": 0.1,
+    "ipg_max": 3,
+    "msgs_per_packet": 4,
+    "tracked_share": 0.5,
+    "filler_rate": 0.12,
+    "unknown_ref_rate": 0.01,
+    "target_live": 60,
+    "itch_file": null,
+    "strategy": {
+     "locate": 1,
+     "enable": true,
+     "imb_shift": 1,
+     "max_spread": 500,
+     "max_qty": 500,
+     "stock": "AAPL",
+     "firm": "TTRD"
+    }
+   },
+   "wall_seconds": {
+    "golden_and_stimulus": 0.38,
+    "rtl_sim": 19.08
+   },
+   "rtl_counters": {
+    "lines": 191273,
+    "cycles": 191279,
+    "msgs": 30000,
+    "pkts": 12109,
+    "parse_err": 0,
+    "relevant": 13129,
+    "collisions": 0,
+    "misses": 129,
+    "evictions": 239,
+    "drops": 280,
+    "fifo_ovf": 0,
+    "fifo_max": 1,
+    "orders": 564,
+    "order_q_ovf": 0,
+    "lat_min": 9,
+    "lat_max": 31,
+    "busy_at_end": 0
+   }
+  },
+  "line_rate": {
+   "pass": true,
+   "errors": [],
+   "golden_counters": {
+    "msgs": 20000,
+    "pkts": 984,
+    "parse_err": 0,
+    "relevant": 19993,
+    "collisions": 0,
+    "misses": 224,
+    "evictions": 371,
+    "drops": 436,
+    "orders": 855
+   },
+   "fidelity": {
+    "bbo_match_frac": 0.9150202570899815,
+    "book_updates": 19993,
+    "ref_live_orders_end": 62,
+    "hw_live_orders_end": 62
+   },
+   "message_mix": {
+    "A": 5849,
+    "C": 771,
+    "D": 4807,
+    "E": 3147,
+    "F": 1005,
+    "R": 6,
+    "S": 1,
+    "U": 2510,
+    "X": 1904
+   },
+   "snapshots_compared": 19993,
+   "orders_compared": 855,
+   "latency_pkt_cycles": {
+    "min": 9,
+    "median": 56,
+    "max": 171,
+    "mean": 62.668,
+    "n": 855
+   },
+   "latency_msg_cycles": {
+    "min": 4,
+    "median": 4,
+    "max": 11,
+    "mean": 4.208,
+    "n": 855
+   },
+   "latency_msg_hist": {
+    "4": 747,
+    "5": 73,
+    "6": 14,
+    "7": 14,
+    "8": 4,
+    "9": 1,
+    "11": 2
+   },
+   "throughput": {
+    "packets": 984,
+    "bytes": 658978,
+    "beats": 82819,
+    "window_cycles": 82819,
+    "sim_cycles": 82833,
+    "msgs_per_cycle": 0.2415,
+    "book_msgs_per_cycle": 0.2414,
+    "bus_utilization": 1.0,
+    "fifo_max_occupancy": 1
+   },
+   "config": {
+    "messages": 20000,
+    "seed": 2,
+    "order_bits": 12,
+    "depth": 8,
+    "gap_prob": 0.0,
+    "ipg_max": 0,
+    "msgs_per_packet": 40,
+    "tracked_share": 1.0,
+    "filler_rate": 0.0,
+    "unknown_ref_rate": 0.01,
+    "target_live": 60,
+    "itch_file": null,
+    "strategy": {
+     "locate": 1,
+     "enable": true,
+     "imb_shift": 1,
+     "max_spread": 500,
+     "max_qty": 500,
+     "stock": "AAPL",
+     "firm": "TTRD"
+    }
+   },
+   "wall_seconds": {
+    "golden_and_stimulus": 0.36,
+    "rtl_sim": 10.52
+   },
+   "rtl_counters": {
+    "lines": 82821,
+    "cycles": 82833,
+    "msgs": 20000,
+    "pkts": 984,
+    "parse_err": 0,
+    "relevant": 19993,
+    "collisions": 0,
+    "misses": 224,
+    "evictions": 371,
+    "drops": 436,
+    "fifo_ovf": 0,
+    "fifo_max": 1,
+    "orders": 855,
+    "order_q_ovf": 0,
+    "lat_min": 9,
+    "lat_max": 171,
+    "busy_at_end": 0
+   }
+  },
+  "parser_worst": {
+   "pass": true,
+   "errors": [],
+   "golden_counters": {
+    "msgs": 20000,
+    "pkts": 200,
+    "parse_err": 0,
+    "relevant": 0,
+    "collisions": 0,
+    "misses": 0,
+    "evictions": 0,
+    "drops": 0,
+    "orders": 0
+   },
+   "fidelity": {
+    "bbo_match_frac": 0.0,
+    "book_updates": 0,
+    "ref_live_orders_end": 0,
+    "hw_live_orders_end": 0
+   },
+   "message_mix": {
+    "S": 10000,
+    "W": 10000
+   },
+   "snapshots_compared": 0,
+   "orders_compared": 0,
+   "latency_pkt_cycles": null,
+   "latency_msg_cycles": null,
+   "latency_msg_hist": {},
+   "throughput": {
+    "packets": 200,
+    "bytes": 284000,
+    "beats": 35600,
+    "window_cycles": 35600,
+    "sim_cycles": 35607,
+    "msgs_per_cycle": 0.5618,
+    "book_msgs_per_cycle": 0.0,
+    "bus_utilization": 1.0,
+    "fifo_max_occupancy": 0
+   },
+   "config": {
+    "messages": 5000,
+    "seed": 3,
+    "order_bits": 12,
+    "depth": 8,
+    "gap_prob": 0.0,
+    "ipg_max": 0,
+    "msgs_per_packet": 4,
+    "tracked_share": 0.5,
+    "filler_rate": 0.12,
+    "unknown_ref_rate": 0.01,
+    "target_live": 60,
+    "itch_file": null,
+    "strategy": {
+     "locate": 1,
+     "enable": true,
+     "imb_shift": 1,
+     "max_spread": 500,
+     "max_qty": 500,
+     "stock": "AAPL",
+     "firm": "TTRD"
+    }
+   },
+   "wall_seconds": {
+    "golden_and_stimulus": 0.04,
+    "rtl_sim": 4.06
+   },
+   "rtl_counters": {
+    "lines": 35602,
+    "cycles": 35607,
+    "msgs": 20000,
+    "pkts": 200,
+    "parse_err": 0,
+    "relevant": 0,
+    "collisions": 0,
+    "misses": 0,
+    "evictions": 0,
+    "drops": 0,
+    "fifo_ovf": 0,
+    "fifo_max": 0,
+    "orders": 0,
+    "order_q_ovf": 0,
+    "lat_min": 4294967295,
+    "lat_max": 0,
+    "busy_at_end": 0
+   }
+  },
+  "book_worst": {
+   "pass": true,
+   "errors": [],
+   "golden_counters": {
+    "msgs": 20000,
+    "pkts": 334,
+    "parse_err": 0,
+    "relevant": 20000,
+    "collisions": 0,
+    "misses": 8572,
+    "evictions": 0,
+    "drops": 0,
+    "orders": 0
+   },
+   "fidelity": {
+    "bbo_match_frac": 1.0,
+    "book_updates": 20000,
+    "ref_live_orders_end": 0,
+    "hw_live_orders_end": 0
+   },
+   "message_mix": {
+    "A": 2857,
+    "D": 11429,
+    "U": 5714
+   },
+   "snapshots_compared": 20000,
+   "orders_compared": 0,
+   "latency_pkt_cycles": null,
+   "latency_msg_cycles": null,
+   "latency_msg_hist": {},
+   "throughput": {
+    "packets": 334,
+    "bytes": 566673,
+    "beats": 71001,
+    "window_cycles": 71001,
+    "sim_cycles": 71008,
+    "msgs_per_cycle": 0.2817,
+    "book_msgs_per_cycle": 0.2817,
+    "bus_utilization": 1.0,
+    "fifo_max_occupancy": 1
+   },
+   "config": {
+    "messages": 5000,
+    "seed": 4,
+    "order_bits": 12,
+    "depth": 8,
+    "gap_prob": 0.0,
+    "ipg_max": 0,
+    "msgs_per_packet": 4,
+    "tracked_share": 0.5,
+    "filler_rate": 0.12,
+    "unknown_ref_rate": 0.01,
+    "target_live": 60,
+    "itch_file": null,
+    "strategy": {
+     "locate": 1,
+     "enable": true,
+     "imb_shift": 1,
+     "max_spread": 500,
+     "max_qty": 500,
+     "stock": "AAPL",
+     "firm": "TTRD"
+    }
+   },
+   "wall_seconds": {
+    "golden_and_stimulus": 0.18,
+    "rtl_sim": 9.79
+   },
+   "rtl_counters": {
+    "lines": 71003,
+    "cycles": 71008,
+    "msgs": 20000,
+    "pkts": 334,
+    "parse_err": 0,
+    "relevant": 20000,
+    "collisions": 0,
+    "misses": 8572,
+    "evictions": 0,
+    "drops": 0,
+    "fifo_ovf": 0,
+    "fifo_max": 1,
+    "orders": 0,
+    "order_q_ovf": 0,
+    "lat_min": 4294967295,
+    "lat_max": 0,
+    "busy_at_end": 0
+   }
+  }
+ },
+ "regression": {
+  "random_small_table": [
+   {
+    "seed": 101,
+    "pass": true,
+    "errors": [],
+    "snapshots": 1739,
+    "orders": 67,
+    "collisions": 292,
+    "misses": 524,
+    "evictions": 40,
+    "drops": 61
+   },
+   {
+    "seed": 102,
+    "pass": true,
+    "errors": [],
+    "snapshots": 1724,
+    "orders": 55,
+    "collisions": 291,
+    "misses": 504,
+    "evictions": 42,
+    "drops": 76
+   },
+   {
+    "seed": 103,
+    "pass": true,
+    "errors": [],
+    "snapshots": 1802,
+    "orders": 67,
+    "collisions": 303,
+    "misses": 563,
+    "evictions": 33,
+    "drops": 65
+   },
+   {
+    "seed": 104,
+    "pass": true,
+    "errors": [],
+    "snapshots": 1799,
+    "orders": 54,
+    "collisions": 315,
+    "misses": 517,
+    "evictions": 35,
+    "drops": 90
+   },
+   {
+    "seed": 105,
+    "pass": true,
+    "errors": [],
+    "snapshots": 1799,
+    "orders": 56,
+    "collisions": 296,
+    "misses": 536,
+    "evictions": 47,
+    "drops": 79
+   },
+   {
+    "seed": 106,
+    "pass": true,
+    "errors": [],
+    "snapshots": 1756,
+    "orders": 67,
+    "collisions": 309,
+    "misses": 513,
+    "evictions": 53,
+    "drops": 71
+   },
+   {
+    "seed": 107,
+    "pass": true,
+    "errors": [],
+    "snapshots": 1792,
+    "orders": 69,
+    "collisions": 313,
+    "misses": 538,
+    "evictions": 39,
+    "drops": 58
+   },
+   {
+    "seed": 108,
+    "pass": true,
+    "errors": [],
+    "snapshots": 1723,
+    "orders": 72,
+    "collisions": 291,
+    "misses": 477,
+    "evictions": 48,
+    "drops": 82
+   }
+  ],
+  "directed_edge_cases": {
+   "pass": true,
+   "errors": [],
+   "counters": {
+    "msgs": 40,
+    "pkts": 21,
+    "parse_err": 0,
+    "relevant": 35,
+    "collisions": 2,
+    "misses": 4,
+    "evictions": 1,
+    "drops": 1,
+    "orders": 4
+   }
+  },
+  "parser_adversarial": [
+   {
+    "seed": 1,
+    "bad_rate": 0.0,
+    "packets": 500,
+    "errors": []
+   },
+   {
+    "seed": 2,
+    "bad_rate": 0.0,
+    "packets": 500,
+    "errors": []
+   },
+   {
+    "seed": 3,
+    "bad_rate": 0.3,
+    "packets": 500,
+    "errors": []
+   },
+   {
+    "seed": 4,
+    "bad_rate": 0.3,
+    "packets": 500,
+    "errors": []
+   }
+  ]
+ },
+ "synth": {
+  "tool": "Yosys 0.33 (git sha1 2584903a060)",
+  "flow": "synth_xilinx -family xc7 -noiopad (no P&R, no timing)",
+  "params": {
+   "ORDER_BITS": 12,
+   "DEPTH": 8
+  },
+  "total": {
+   "LUT": 6919,
+   "FF": 3203,
+   "CARRY4": 660,
+   "MUXF7": 569,
+   "MUXF8": 203,
+   "LUTRAM_RAM32M": 76,
+   "BRAM_RAMB36E1": 15,
+   "BRAM_RAMB18E1": 0
+  },
+  "per_module_self": {
+   "sync_fifo": {
+    "LUT": 34,
+    "FF": 26
+   },
+   "price_levels": {
+    "LUT": 3239,
+    "FF": 1040
+   },
+   "book_engine": {
+    "LUT": 1101,
+    "FF": 589
+   },
+   "itch_parser": {
+    "LUT": 1559,
+    "FF": 941
+   },
+   "msg_decode": {
+    "LUT": 107,
+    "FF": 0
+   },
+   "ouch_tx": {
+    "LUT": 442,
+    "FF": 573
+   },
+   "strategy": {
+    "LUT": 436,
+    "FF": 2
+   },
+   "t2t_top": {
+    "LUT": 1,
+    "FF": 32
+   }
+  },
+  "seconds": 97.5
+ },
+ "mutation": {
+  "mutants": 16,
+  "killed": 16,
+  "results": [
+   {
+    "file": "itch_parser.v",
+    "desc": "region ending exactly at beat end missed",
+    "status": "KILLED",
+    "by": "parser: message count golden=726 rtl=481"
+   },
+   {
+    "file": "itch_parser.v",
+    "desc": "new body starts one lane early",
+    "status": "KILLED",
+    "by": "parser: message count golden=726 rtl=205"
+   },
+   {
+    "file": "itch_parser.v",
+    "desc": "drop the split-prefix L==7 completion path",
+    "status": "KILLED",
+    "by": "parser: message count golden=726 rtl=712"
+   },
+   {
+    "file": "itch_parser.v",
+    "desc": "wrong minimum message length",
+    "status": "KILLED",
+    "by": "parser: message count golden=726 rtl=387"
+   },
+   {
+    "file": "msg_decode.v",
+    "desc": "ignore Order Executed With Price",
+    "status": "KILLED",
+    "by": "random: snapshot count golden=1280 rtl=1225"
+   },
+   {
+    "file": "msg_decode.v",
+    "desc": "replace price at wrong offset",
+    "status": "KILLED",
+    "by": "random: book mismatch at msg 24/24: golden bids=[(1280800, 400), (1280700, 100), (1279800, 2000)] asks=[(1281100, 25), (1281200, 1100), (128"
+   },
+   {
+    "file": "price_levels.v",
+    "desc": "level not removed when qty hits 0",
+    "status": "KILLED",
+    "by": "random: book mismatch at msg 24/24: golden bids=[(1280800, 400), (1280700, 100), (1279800, 2000)] asks=[(1281100, 25), (1281200, 1100), (128"
+   },
+   {
+    "file": "price_levels.v",
+    "desc": "zero-share add creates a level",
+    "status": "KILLED",
+    "by": "directed: book mismatch at msg 24/24: golden bids=[(100250, 250), (100200, 400), (100000, 50)] asks=[(100400, 100)] rtl bids=[(100250, 250),"
+   },
+   {
+    "file": "price_levels.v",
+    "desc": "ask side sorted the wrong way",
+    "status": "KILLED",
+    "by": "random: book mismatch at msg 9/9: golden bids=[] asks=[(1281300, 100), (1281700, 200)] rtl bids=[] asks=[(1281700, 200), (1281300, 100)]"
+   },
+   {
+    "file": "book_engine.v",
+    "desc": "no clamp on over-execution",
+    "status": "KILLED",
+    "by": "directed: order table mismatch (1 entries differ), e.g. [(2, (2, 1, 100500, 4294966445))]"
+   },
+   {
+    "file": "book_engine.v",
+    "desc": "same-slot replace read-before-write hazard",
+    "status": "KILLED",
+    "by": "random: book mismatch at msg 123/123: golden bids=[(1281000, 2000), (1280900, 760), (1280700, 400), (1280600, 300)] asks=[(1281100, 204), (1"
+   },
+   {
+    "file": "book_engine.v",
+    "desc": "add overwrites colliding order",
+    "status": "KILLED",
+    "by": "random: book mismatch at msg 121/121: golden bids=[(1281000, 2000), (1280900, 760), (1280700, 400), (1280600, 300)] asks=[(1281100, 204), (1"
+   },
+   {
+    "file": "strategy.v",
+    "desc": "sell not edge-triggered",
+    "status": "KILLED",
+    "by": "random: order count golden=41 rtl=320"
+   },
+   {
+    "file": "strategy.v",
+    "desc": "max_qty cap ignored",
+    "status": "KILLED",
+    "by": "random: OUCH mismatch msg 199/199: golden=4f545430303030303030303030303453000001f44141504c2020202000138b84000000005454524459504e000000004e4e"
+   },
+   {
+    "file": "ouch_tx.v",
+    "desc": "wrong customer type",
+    "status": "KILLED",
+    "by": "random: OUCH mismatch msg 13/13: golden=4f545430303030303030303030303153000001904141504c2020202000138b20000000005454524459504e000000004e4e r"
+   },
+   {
+    "file": "ouch_tx.v",
+    "desc": "latency counter off by one",
+    "status": "KILLED",
+    "by": "random: latency mismatch msg 13: rtl=(28,3) tb=(28,4)"
+   }
+  ]
+ }
+}

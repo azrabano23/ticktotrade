@@ -1,0 +1,265 @@
+
+12. Printing statistics.
+
+=== $paramod$377d0f38ebcf8373267db44a19c005e0daddeb9d\sync_fifo ===
+
+   Number of wires:                 44
+   Number of wire bits:            986
+   Number of public wires:          15
+   Number of public wire bits:     607
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 91
+     CARRY4                          3
+     FDRE                           13
+     INV                             5
+     LUT1                            3
+     LUT2                            2
+     LUT4                            2
+     LUT5                            3
+     LUT6                            7
+     MUXF7                           4
+     RAM32M                         49
+
+=== $paramod$3c1ed34c2e4837a8659c96bbc53f5d927d10bfe6\sync_fifo ===
+
+   Number of wires:                 44
+   Number of wire bits:            593
+   Number of public wires:          15
+   Number of public wire bits:     345
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 69
+     CARRY4                          3
+     FDRE                           13
+     INV                             5
+     LUT1                            3
+     LUT2                            2
+     LUT4                            2
+     LUT5                            3
+     LUT6                            7
+     MUXF7                           4
+     RAM32M                         27
+
+=== $paramod$5fa62ba444caa5ee32923587e9f4c8ec5d782e36\order_table ===
+
+   Number of wires:                 83
+   Number of wire bits:           3027
+   Number of public wires:           7
+   Number of public wire bits:     318
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 15
+     RAMB36E1                       15
+
+=== $paramod$d160c9fc9cc73591c2c9cbcbec70ce0b87086d66\price_levels ===
+
+   Number of wires:               1424
+   Number of wire bits:           4907
+   Number of public wires:          28
+   Number of public wire bits:    1110
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2670
+     CARRY4                         99
+     FDRE                          520
+     INV                            32
+     LUT2                          276
+     LUT3                          277
+     LUT4                          187
+     LUT5                          477
+     LUT6                          502
+     MUXF7                         216
+     MUXF8                          84
+
+=== $paramod$e7fc84998ff8dbecb8dfb0e0bbbacfc3a08a1f47\price_levels ===
+
+   Number of wires:               1084
+   Number of wire bits:           4483
+   Number of public wires:          28
+   Number of public wire bits:    1110
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2278
+     CARRY4                         99
+     FDRE                          520
+     INV                            32
+     LUT2                          326
+     LUT3                          267
+     LUT4                           20
+     LUT5                          485
+     LUT6                          422
+     MUXF7                          80
+     MUXF8                          27
+
+=== $paramod$e9954aa27c3a734c77413ddb9a4f7417df684d1a\book_engine ===
+
+   Number of wires:                960
+   Number of wire bits:           6048
+   Number of public wires:          76
+   Number of public wire bits:    3692
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               1973
+     $paramod$377d0f38ebcf8373267db44a19c005e0daddeb9d\sync_fifo      1
+     $paramod$5fa62ba444caa5ee32923587e9f4c8ec5d782e36\order_table      1
+     $paramod$d160c9fc9cc73591c2c9cbcbec70ce0b87086d66\price_levels      1
+     $paramod$e7fc84998ff8dbecb8dfb0e0bbbacfc3a08a1f47\price_levels      1
+     CARRY4                         59
+     FDRE                          589
+     LUT2                          369
+     LUT3                          171
+     LUT4                           19
+     LUT5                            6
+     LUT6                          536
+     MUXF7                         147
+     MUXF8                          73
+
+=== $paramod\itch_parser\CAP=s32'00000000000000000000000000101000 ===
+
+   Number of wires:               1300
+   Number of wire bits:          10778
+   Number of public wires:         140
+   Number of public wire bits:    5220
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2892
+     CARRY4                        284
+     FDRE                          938
+     FDSE                            3
+     INV                            48
+     LUT1                           19
+     LUT2                          139
+     LUT3                          240
+     LUT4                          103
+     LUT5                          230
+     LUT6                          828
+     MUXF7                          57
+     MUXF8                           3
+
+=== $paramod\msg_decode\CAP=s32'00000000000000000000000000101000 ===
+
+   Number of wires:                 73
+   Number of wire bits:            954
+   Number of public wires:          20
+   Number of public wire bits:     862
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                144
+     LUT1                            1
+     LUT2                            4
+     LUT3                           33
+     LUT4                            9
+     LUT5                            4
+     LUT6                           56
+     MUXF7                          25
+     MUXF8                          12
+
+=== $paramod\ouch_tx\QLOG2=s32'00000000000000000000000000000011 ===
+
+   Number of wires:                444
+   Number of wire bits:           3476
+   Number of public wires:          57
+   Number of public wire bits:    2023
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               1138
+     $paramod$3c1ed34c2e4837a8659c96bbc53f5d927d10bfe6\sync_fifo      1
+     CARRY4                         83
+     FDRE                          540
+     FDSE                           33
+     INV                            39
+     LUT2                            9
+     LUT3                           46
+     LUT4                          147
+     LUT5                          151
+     LUT6                           89
+
+=== strategy ===
+
+   Number of wires:                214
+   Number of wire bits:           1461
+   Number of public wires:          30
+   Number of public wire bits:     592
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                500
+     CARRY4                         22
+     FDRE                            2
+     LUT2                           42
+     LUT3                          113
+     LUT4                           17
+     LUT5                           44
+     LUT6                          220
+     MUXF7                          36
+     MUXF8                           4
+
+=== t2t_top ===
+
+   Number of wires:                 78
+   Number of wire bits:           3042
+   Number of public wires:          74
+   Number of public wire bits:    2945
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 48
+     $paramod$e9954aa27c3a734c77413ddb9a4f7417df684d1a\book_engine      1
+     $paramod\itch_parser\CAP=s32'00000000000000000000000000101000      1
+     $paramod\msg_decode\CAP=s32'00000000000000000000000000101000      1
+     $paramod\ouch_tx\QLOG2=s32'00000000000000000000000000000011      1
+     BUFG                            1
+     CARRY4                          8
+     FDRE                           32
+     INV                             1
+     LUT3                            1
+     strategy                        1
+
+=== design hierarchy ===
+
+   t2t_top                           1
+     $paramod$e9954aa27c3a734c77413ddb9a4f7417df684d1a\book_engine      1
+       $paramod$377d0f38ebcf8373267db44a19c005e0daddeb9d\sync_fifo      1
+       $paramod$5fa62ba444caa5ee32923587e9f4c8ec5d782e36\order_table      1
+       $paramod$d160c9fc9cc73591c2c9cbcbec70ce0b87086d66\price_levels      1
+       $paramod$e7fc84998ff8dbecb8dfb0e0bbbacfc3a08a1f47\price_levels      1
+     $paramod\itch_parser\CAP=s32'00000000000000000000000000101000      1
+     $paramod\msg_decode\CAP=s32'00000000000000000000000000101000      1
+     $paramod\ouch_tx\QLOG2=s32'00000000000000000000000000000011      1
+       $paramod$3c1ed34c2e4837a8659c96bbc53f5d927d10bfe6\sync_fifo      1
+     strategy                        1
+
+   Number of wires:               5748
+   Number of wire bits:          39755
+   Number of public wires:         490
+   Number of public wire bits:   18824
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              11808
+     BUFG                            1
+     CARRY4                        660
+     FDRE                         3167
+     FDSE                           36
+     INV                           162
+     LUT1                           26
+     LUT2                         1169
+     LUT3                         1148
+     LUT4                          506
+     LUT5                         1403
+     LUT6                         2667
+     MUXF7                         569
+     MUXF8                         203
+     RAM32M                         76
+     RAMB36E1                       15
+
