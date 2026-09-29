@@ -4,6 +4,10 @@
   ticktotrade report                        full measurement suite -> results/
   ticktotrade mutate                        mutation smoke test only
   ticktotrade gen --messages N -o f.itch    write a synthetic binary ITCH file
+  ticktotrade fetch-real                    download the pinned real ITCH excerpts to data/real/
+  ticktotrade replay --itch-file F --symbols SPY,AAPL
+                                            real ITCH file: golden over all of it, RTL bit-exact
+  ticktotrade real-report                   replay every pinned source -> results/real_itch.json
 """
 from __future__ import annotations
 
@@ -72,6 +76,60 @@ def _gen(a) -> int:
     return 0
 
 
+def _fetch_real(a) -> int:
+    from . import replay
+    for name in a.sources or replay.SOURCES:
+        src = replay.SOURCES[name]
+        p = replay.fetch(src)
+        print(f"{name}: {p} ({src.size:,} bytes, sha256 {src.sha256[:16]}... ok)")
+    return 0
+
+
+def _replay(a) -> int:
+    from . import replay
+    syms = [x for x in (a.symbols or "").split(",") if x] or None
+    r = replay.replay_file(a.itch_file, syms, a.rtl_messages, a.order_bits, a.depth,
+                           a.ref_hash, sweep=not a.no_sweep, run_rtl=not a.no_rtl,
+                           strategy={"imb_shift": a.imb_shift, "max_spread": a.max_spread,
+                                     "max_qty": a.max_qty})
+    if a.json:
+        print(json.dumps(r, indent=1, default=str))
+    else:
+        st = r["stream"]
+        print(f"{r['file']}: {st['messages']:,} msgs, {st['packets']:,} MoldUDP64 packets, "
+              f"sha256 {r['sha256']}")
+        print("  mix: " + ", ".join(f"{k}={v}" for k, v in st["message_mix"].items()))
+        print(f"  parser at line rate: {st['line_rate_msgs_per_cycle']} msgs/cycle "
+              f"(mean {st['wire_bytes_per_msg']['mean']} wire bytes/msg)")
+        for sym, s in r["symbols"].items():
+            b = s["book"]
+            print(f"  {sym} (locate {s['locate']}): {b['book_msgs']:,} book msgs, "
+                  f"collisions={b['collisions']} misses={b['misses']} evictions={b['evictions']} "
+                  f"drops={b['drops']} BBO match={b['bbo_match_frac']:.4f} "
+                  f"orders={s['golden_full']['orders']}")
+            x = s.get("rtl")
+            if x:
+                print(f"    RTL {'PASS' if x['pass'] else 'FAIL'} over {x['messages']:,} msgs: "
+                      f"{x['snapshots_compared']:,} snapshots, {x['orders_compared']:,} orders "
+                      f"bit-exact; msg->order cycles {x['latency_msg_cycles']}")
+                for e in x["errors"]:
+                    print("    ERROR:", e)
+    bad = [s for s in r["symbols"].values() if "rtl" in s and not s["rtl"]["pass"]]
+    return 1 if bad else 0
+
+
+def _real_report(a) -> int:
+    from . import report, replay
+    res = replay.run_suite(a.sources or None, a.rtl_messages, allow_fetch=not a.no_fetch)
+    out = report.RESULTS_DIR / "real_itch.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(res, indent=1, default=str) + "\n")
+    replay.write_readme(res)
+    print(replay.real_table(res))
+    print(f"wrote {out}")
+    return 0 if res["all_pass"] else 1
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(prog="ticktotrade", description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -105,6 +163,32 @@ def main(argv=None) -> int:
     g.add_argument("--seed", type=int, default=1)
     g.add_argument("-o", "--output", required=True)
     g.set_defaults(fn=_gen)
+    f = sub.add_parser("fetch-real", help="download the pinned real ITCH excerpts (sha256 checked)")
+    f.add_argument("sources", nargs="*")
+    f.set_defaults(fn=_fetch_real)
+    rp = sub.add_parser("replay", help="replay a real ITCH 5.0 file: golden + bit-exact RTL")
+    rp.add_argument("--itch-file", required=True,
+                    help="length-prefixed ITCH 5.0 (NASDAQ sample format), optionally gzipped")
+    rp.add_argument("--symbols", default=None,
+                    help="comma separated symbols or locates (default: 3 busiest locates)")
+    rp.add_argument("--rtl-messages", type=int, default=None,
+                    help="RTL window: first N messages (default: whole file)")
+    rp.add_argument("--order-bits", type=int, default=12)
+    rp.add_argument("--depth", type=int, default=8)
+    rp.add_argument("--ref-hash", type=int, default=1, choices=(0, 1),
+                    help="order-table index: 1 XOR hash (default), 0 low reference bits")
+    rp.add_argument("--imb-shift", type=int, default=1)
+    rp.add_argument("--max-spread", type=int, default=500)
+    rp.add_argument("--max-qty", type=int, default=500)
+    rp.add_argument("--no-rtl", action="store_true", help="golden model only")
+    rp.add_argument("--no-sweep", action="store_true")
+    rp.add_argument("--json", action="store_true")
+    rp.set_defaults(fn=_replay)
+    rr = sub.add_parser("real-report", help="replay all pinned sources -> results/real_itch.json")
+    rr.add_argument("sources", nargs="*")
+    rr.add_argument("--rtl-messages", type=int, default=None)
+    rr.add_argument("--no-fetch", action="store_true")
+    rr.set_defaults(fn=_real_report)
     a = p.parse_args(argv)
     return a.fn(a)
 

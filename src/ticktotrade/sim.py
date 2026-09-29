@@ -36,9 +36,9 @@ def _stock_hex(s: str, n: int) -> str:
 
 def make_packets(cfg: SimConfig):
     if cfg.itch_file:
+        from .replay import frame_mold
         msgs = list(itch.read_itch_file(cfg.itch_file, cfg.messages))
-        pkts = gen.packetize(msgs, random.Random(cfg.seed), cfg.msgs_per_packet)
-        return msgs, pkts
+        return msgs, frame_mold(msgs)
     gcfg = gen.GenConfig(n_messages=cfg.messages, seed=cfg.seed,
                          tracked_locate=cfg.strategy.locate,
                          tracked_share=cfg.tracked_share, filler_rate=cfg.filler_rate,

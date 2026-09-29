@@ -122,7 +122,9 @@ def read_itch_file(path: str | Path, limit: int | None = None) -> Iterator[bytes
     MoldUDP64 message blocks.
     """
     p = Path(path)
-    opener = gzip.open if p.suffix == ".gz" else open
+    with open(p, "rb") as f:
+        magic = f.read(2)
+    opener = gzip.open if magic == b"\x1f\x8b" else open   # sniff, don't trust the suffix
     n = 0
     with opener(p, "rb") as f:
         while limit is None or n < limit:
