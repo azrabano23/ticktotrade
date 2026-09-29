@@ -92,3 +92,23 @@ def test_checker_detects_corruption():
     mid, bids, asks = out["snapshots"][10]
     out["snapshots"][10] = (mid, bids[:-1], asks)
     assert any("book mismatch" in e for e in sim.compare(g, out, stim))
+
+
+# ---------------- order-table index modes (real-data regression) ----------------
+@pytest.mark.parametrize("ref_hash", [0, 1])
+def test_stride4_refs_both_index_modes(ref_hash):
+    """NASDAQ TotalView gives one symbol's orders refs with a common ref % 4.
+    Both REF_HASH builds must stay bit-exact with the golden model on such flow."""
+    r = sim.run_sim(sim.SimConfig(messages=2500, seed=31, order_bits=6, depth=8, ref_stride=4,
+                                  ref_hash=ref_hash, tracked_share=1.0))
+    assert r["pass"], r["errors"]
+    assert r["golden_counters"]["collisions"] > 0
+
+
+def test_directed_edge_cases_low_bit_index():
+    pk = gen.packetize(scenarios.edge_case_messages(ref_hash=0), random.Random(5), 3,
+                       heartbeat_rate=0.1)
+    r = sim.run_packets(pk, sim.SimConfig(seed=5, order_bits=4, depth=4, gap_prob=0.3, ref_hash=0))
+    assert r["pass"], r["errors"]
+    c = r["golden_counters"]
+    assert c["collisions"] == 2 and c["misses"] == 4

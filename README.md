@@ -160,10 +160,17 @@ below 7, the rest of that packet is discarded. Messages of unhandled types
 are skipped using the length prefix alone.
 
 **Order table.** The table has 4096 entries of 130 bits: `{valid, ref[64],
-side, price, shares}`, which infers 15 RAMB36. It is direct-mapped on
-`ref[11:0]`. NASDAQ assigns order references sequentially across all
-symbols, so the low bits make a near-ideal hash. The full reference is
-stored as a tag.
+side, price, shares}`, which infers 15 RAMB36. It is direct-mapped, and the
+full reference is stored as a tag. The index is an XOR hash of the
+reference (`REF_HASH=1`): slot bit *i* is the parity of `ref & mask[i]`, with
+fixed masks chosen so that any aligned run of references with stride 1, 2,
+4, 8 or 16 fills every slot. That costs a 64-input XOR tree per index bit on
+the table address path. The first version indexed by `ref[11:0]`, assuming
+sequential references make the low bits a near-ideal hash. Real TotalView
+data showed that on NASDAQ's main book every order of one symbol has the
+same `ref % 4`, so that index could only reach a quarter of the table
+([Real ITCH replay](#real-itch-replay)). `REF_HASH=0` keeps the old index for
+comparison.
 *Collision policy:* an Add (or the new half of a Replace) whose slot holds a
 different live order is **dropped** and counted. The resident order stays.
 Later messages for the dropped order miss and are counted too. A Replace
@@ -260,7 +267,9 @@ at 322 MHz would likely add one or two pipeline registers.
   - a gapless line-rate run
   - a test that the checker flags a corrupted snapshot, OUCH byte or
     latency value
-- `ticktotrade mutate` injects 16 plausible RTL bugs (off-by-one lane, wrong
+  - stride-4 order references (the TotalView pattern) with both `REF_HASH`
+    builds, and the directed scenario with the old low-bit index
+- `ticktotrade mutate` injects 17 plausible RTL bugs (off-by-one lane, wrong
   field offset, missing clamp, the same-slot read-before-write hazard, a
   non-edge-triggered strategy, a latency counter off by one, and others) and
   checks that each is caught. Two earlier mutants that survived turned out to

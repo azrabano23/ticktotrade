@@ -2,9 +2,15 @@
 import random
 
 from ticktotrade import gen, golden
-from ticktotrade.book import ADD, DELETE, REDUCE, REPLACE, Event, HwBook, RefBook, event_from_msg
+from ticktotrade.book import (ADD, DELETE, HASH_LOW_BITS, HASH_XOR, REDUCE, REF_HASH_MASKS, REPLACE,
+                              Event, HwBook, RefBook, event_from_msg, ref_slot)
 from ticktotrade.itch import encode
 from ticktotrade.strategy import ImbalanceStrategy, StrategyConfig
+
+
+def HB(order_bits=8, depth=4):
+    """Book indexed by the low reference bits, so slots in these tests are just ref % 2**bits."""
+    return HwBook(order_bits, depth, HASH_LOW_BITS)
 
 
 def A(ref, side, sh, px):
@@ -12,7 +18,7 @@ def A(ref, side, sh, px):
 
 
 def test_add_and_levels_sorted():
-    b = HwBook(order_bits=8, depth=4)
+    b = HB(order_bits=8, depth=4)
     for i, (side, px, sh) in enumerate([(0, 100, 10), (0, 102, 5), (0, 101, 7), (1, 105, 3),
                                         (1, 104, 4), (0, 102, 1)]):
         b.apply(A(i + 1, side, sh, px))
@@ -22,7 +28,7 @@ def test_add_and_levels_sorted():
 
 
 def test_execute_partial_full_and_clamp():
-    b = HwBook(8, 4)
+    b = HB(8, 4)
     b.apply(A(1, 0, 100, 50))
     b.apply(Event(REDUCE, 0, 1, shares=30))               # E / C / X partial
     assert b.snapshot(0) == [(50, 70)] and b.table[1][3] == 70
@@ -33,7 +39,7 @@ def test_execute_partial_full_and_clamp():
 
 
 def test_delete_known_and_unknown():
-    b = HwBook(8, 4)
+    b = HB(8, 4)
     b.apply(A(1, 1, 100, 50))
     b.apply(A(2, 1, 50, 50))
     b.apply(Event(DELETE, 0, 1))
@@ -43,7 +49,7 @@ def test_delete_known_and_unknown():
 
 
 def test_replace_moves_order_and_keeps_side():
-    b = HwBook(4, 4)
+    b = HB(4, 4)
     b.apply(A(3, 1, 100, 60))
     b.apply(Event(REPLACE, 0, 3, shares=40, price=61, ref2=19))   # 19 & 15 == 3: same slot
     assert b.snapshot(1) == [(61, 40)] and b.table == {3: (19, 1, 61, 40)}
@@ -53,7 +59,7 @@ def test_replace_moves_order_and_keeps_side():
 
 
 def test_collision_policy_drops_new_add():
-    b = HwBook(4, 4)
+    b = HB(4, 4)
     b.apply(A(1, 0, 10, 50))
     b.apply(A(17, 0, 20, 51))
     assert b.c.collisions == 1 and b.table[1][0] == 1 and b.snapshot(0) == [(50, 10)]
@@ -62,7 +68,7 @@ def test_collision_policy_drops_new_add():
 
 
 def test_level_eviction_and_drop():
-    b = HwBook(8, 3)
+    b = HB(8, 3)
     for i, px in enumerate([100, 99, 98]):
         b.apply(A(i + 1, 0, 10, px))
     b.apply(A(4, 0, 10, 97))                  # worse than all, side full -> drop
@@ -74,7 +80,7 @@ def test_level_eviction_and_drop():
 
 
 def test_zero_share_add_creates_no_level():
-    b = HwBook(8, 4)
+    b = HB(8, 4)
     b.apply(A(1, 1, 0, 10))
     assert b.snapshot(1) == [] and 1 in b.table
 
@@ -127,3 +133,44 @@ def test_golden_pipeline_counts():
     assert c["orders"] == len(r.orders) > 0
     assert all(len(b) == 49 for _, b in r.orders)
     assert r.fidelity["bbo_match_frac"] > 0.9
+
+
+# ---------------- order-table index hash (real-data regression) ----------------
+def test_ref_hash_is_bijective_on_aligned_strided_runs():
+    """The XOR hash spreads any aligned run of 2**bits references with stride
+    1..16 (other bits fixed) over every slot."""
+    for bits in (4, 6, 12, 16):
+        n = 1 << bits
+        for stride in (1, 2, 4, 8, 16):
+            for hi in (0, 0x1234567):
+                base = hi * n * stride + (stride - 1 if stride > 1 else 0)
+                run = [base + stride * k for k in range(n)]
+                assert len({ref_slot(r, bits) for r in run}) == n, (bits, stride)
+
+
+def test_low_bit_index_wastes_table_on_stride4_refs():
+    """What the real 2019-12-30 TotalView replay exposed: one symbol's refs are
+    all 4k+1, so a low-bit index can only ever use a quarter of the table."""
+    import random
+    rng = random.Random(1)
+    refs = sorted({4 * rng.randrange(32_000_000, 33_000_000) + 1 for _ in range(20000)})
+    assert len({ref_slot(r, 12, HASH_LOW_BITS) for r in refs}) == 1024
+    assert len({ref_slot(r, 12, HASH_XOR) for r in refs}) > 4000     # ~random: e^-4.9 unused
+
+
+def test_ref_hash_masks_match_rtl():
+    import re
+    from ticktotrade import rtl
+    v = (rtl.RTL_DIR / "book_engine.v").read_text()
+    got = {int(i): int(h, 16) for i, h in re.findall(r"5'd(\d+): hmask = 64'h([0-9A-F]+);", v)}
+    assert got == dict(enumerate(REF_HASH_MASKS))
+
+
+def test_stride4_flow_collides_less_with_hash():
+    r = {}
+    for h in (HASH_LOW_BITS, HASH_XOR):
+        msgs, pk = gen.generate(gen.GenConfig(n_messages=6000, seed=4, ref_stride=4,
+                                              tracked_share=1.0, target_live=40))
+        g = golden.run_golden(pk, StrategyConfig(locate=1), order_bits=6, depth=8, ref_hash=h)
+        r[h] = g.counters["collisions"]
+    assert r[HASH_XOR] < 0.6 * r[HASH_LOW_BITS], r

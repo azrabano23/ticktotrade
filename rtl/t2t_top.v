@@ -10,7 +10,8 @@ module t2t_top #(
     parameter ORDER_BITS = 12,
     parameter DEPTH      = 8,
     parameter FIFO_LOG2  = 3,
-    parameter OQ_LOG2    = 3
+    parameter OQ_LOG2    = 3,
+    parameter REF_HASH   = 1
 ) (
     input  wire        clk,
     input  wire        rst,
@@ -89,7 +90,8 @@ module t2t_top #(
     wire [DEPTH-1:0]    bid_v, ask_v;
     wire [32*DEPTH-1:0] bid_px, bid_q, ask_px, ask_q;
     wire                eng_busy;
-    book_engine #(.ORDER_BITS(ORDER_BITS), .DEPTH(DEPTH), .FIFO_LOG2(FIFO_LOG2)) u_eng (
+    book_engine #(.ORDER_BITS(ORDER_BITS), .DEPTH(DEPTH), .FIFO_LOG2(FIFO_LOG2),
+                  .REF_HASH(REF_HASH)) u_eng (
         .clk(clk), .rst(rst), .in_valid(r_valid), .in_kind(r_kind), .in_side(r_side),
         .in_ref(r_ref), .in_ref2(r_ref2), .in_shares(r_sh), .in_price(r_px),
         .in_id(m_id), .in_sof(m_sof), .in_eom(m_eom),

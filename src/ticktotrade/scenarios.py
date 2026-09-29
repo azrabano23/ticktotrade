@@ -2,10 +2,30 @@
 
 Run with a small table and shallow book (order_bits=4 -> 16 slots, depth=4)
 so that collisions, same-slot replaces, evictions and drops are all hit.
+
+The scenario is written with "logical" references whose intended table slot
+is ``ref % 16``.  :func:`edge_case_messages` maps each logical reference to a
+wire reference that lands in that slot under the table's index hash, so the
+same collisions happen whichever ``ref_hash`` the RTL is built with.
 """
 from __future__ import annotations
 
 from . import itch
+from .book import HASH_XOR, ref_slot
+
+ORDER_BITS = 4
+
+
+def wire_ref(r: int, ref_hash: int = HASH_XOR, order_bits: int = ORDER_BITS) -> int:
+    """A distinct reference per logical ref ``r`` whose slot is ``r % 2**order_bits``.
+
+    The XOR hash is a bijection on every aligned block of 2**order_bits
+    consecutive references, so block ``r`` holds exactly one such reference."""
+    n = 1 << order_bits
+    if ref_hash != HASH_XOR:
+        return r
+    return next(x for x in range(n * r, n * r + n)
+                if ref_slot(x, order_bits, ref_hash) == r % n)
 
 P = 10000  # $1.00
 
@@ -21,7 +41,22 @@ def add(ref, side, sh, px, locate=1, mpid=None):
     return _m("A", locate, order_ref=ref, side=side, shares=sh, price=px)
 
 
-def edge_case_messages() -> list[bytes]:
+def edge_case_messages(ref_hash: int = HASH_XOR) -> list[bytes]:
+    m = _logical_messages()
+    out = []
+    for raw in m:
+        d = itch.decode(raw)
+        if "raw" in d or d["type"] not in "AFECXDU":
+            out.append(raw)
+            continue
+        d["order_ref"] = wire_ref(d["order_ref"], ref_hash)
+        if d["type"] == "U":
+            d["new_order_ref"] = wire_ref(d["new_order_ref"], ref_hash)
+        out.append(itch.encode(d))
+    return out
+
+
+def _logical_messages() -> list[bytes]:
     m = []
     m.append(_m("S", 0, event_code="O"))
     m.append(_m("D", order_ref=999))                          # delete unknown -> miss

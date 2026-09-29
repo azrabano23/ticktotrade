@@ -39,6 +39,7 @@ class GenConfig:
     max_offset_ticks: int = 25
     msgs_per_packet: int = 4       # max messages per packet (uniform 1..N)
     max_packet_bytes: int = 1400
+    ref_stride: int = 1            # 4 mimics NASDAQ TotalView, where one symbol's refs share ref % 4
 
 
 class _Sym:
@@ -125,7 +126,7 @@ class MarketGen:
         px = self._price_for(s, side)
         sh = r.choice(LOTS)
         ref = self.next_ref
-        self.next_ref += 1
+        self.next_ref += self.cfg.ref_stride
         s.add(ref, side, px, sh)
         m = self._hdr("F" if r.random() < 0.15 else "A", s.locate)
         m.update(order_ref=ref, side="S" if side else "B", shares=sh, stock=s.name, price=px)
@@ -207,7 +208,7 @@ class MarketGen:
         npx = max(npx, TICK)
         nsh = r.choice(LOTS)
         nref = self.next_ref
-        self.next_ref += 1
+        self.next_ref += self.cfg.ref_stride
         s.add(nref, side, npx, nsh)
         m = self._hdr("U", s.locate)
         m.update(order_ref=ref, new_order_ref=nref, shares=nsh, price=npx)

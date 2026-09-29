@@ -1,9 +1,14 @@
 // book_engine.v -- order table + two price-level arrays + control FSM.
 //
-// Order table: direct-mapped, 2**ORDER_BITS entries indexed by the low
-// ORDER_BITS of the ITCH order reference number (NASDAQ assigns references
-// sequentially, so the low bits are a near-ideal hash).  The full 64-bit
-// reference is stored as a tag.
+// Order table: direct-mapped, 2**ORDER_BITS entries.  The full 64-bit ITCH
+// order reference is stored as a tag.  Index (REF_HASH):
+//   1 (default): slot bit i = parity(ref & hmask(i)), an H3-style XOR hash
+//      that is a bijection on aligned runs of references with stride 1..16.
+//   0: the low ORDER_BITS of the reference.  Replaying real NASDAQ
+//      TotalView-ITCH showed why this is not enough: all references of one
+//      symbol share ref % 4 there, so only a quarter of the slots were used
+//      and collisions were ~3.5x higher (README, "Real ITCH replay").
+// The masks are the same constants as REF_HASH_MASKS in src/ticktotrade/book.py.
 //   Collision policy: an Add (or the new half of a Replace) whose slot holds a
 //   different live order is DROPPED and counted in cnt_coll; the resident order
 //   is kept.  Later E/C/X/D/U for a dropped order then miss (cnt_miss).
@@ -19,7 +24,8 @@
 module book_engine #(
     parameter ORDER_BITS = 12,
     parameter DEPTH      = 8,
-    parameter FIFO_LOG2  = 3
+    parameter FIFO_LOG2  = 3,
+    parameter REF_HASH   = 1        // 1: XOR hash of the reference, 0: low bits
 ) (
     input  wire                clk,
     input  wire                rst,
@@ -57,6 +63,44 @@ module book_engine #(
     localparam REC_W = 3 + 1 + 64 + 64 + 32 + 32 + 32 + 32 + 32;   // 292
     localparam OB = ORDER_BITS;
 
+    // ---------------- order-table index hash ----------------
+    function [63:0] hmask(input [4:0] i);
+        case (i)
+            5'd0: hmask = 64'hCEB2A1E35473A47F;
+            5'd1: hmask = 64'hF39CC82F7C91D3AA;
+            5'd2: hmask = 64'h4CAB2200DBA9D299;
+            5'd3: hmask = 64'h2BBA8FF82315F05D;
+            5'd4: hmask = 64'hDE81D2758A77ED96;
+            5'd5: hmask = 64'h399F609342026F9C;
+            5'd6: hmask = 64'h4A76FAEB468B53CD;
+            5'd7: hmask = 64'hFFBF64F02164789B;
+            5'd8: hmask = 64'h4D0400073EC3158D;
+            5'd9: hmask = 64'hA9FED6EFB8780D1C;
+            5'd10: hmask = 64'h16E2BBD7712F18D9;
+            5'd11: hmask = 64'h8F78185EC1349899;
+            5'd12: hmask = 64'hBDFFCF43E22546F8;
+            5'd13: hmask = 64'hB93FEE8F101B139B;
+            5'd14: hmask = 64'h793E56C80303F19D;
+            5'd15: hmask = 64'h7BCD71DCCD6B184E;
+            5'd16: hmask = 64'hE8F0FB145BB59AD7;
+            5'd17: hmask = 64'hD27AA12022152E6C;
+            5'd18: hmask = 64'h6592ACE46EB282DA;
+            5'd19: hmask = 64'h5F82EAA4AF96A8BB;
+            5'd20: hmask = 64'h58C60588F377CFE0;
+            5'd21: hmask = 64'h15157E8AD8B0F614;
+            5'd22: hmask = 64'hFC5E0A8D99BED9EE;
+            5'd23: hmask = 64'h364E3B3872F27FB3;
+            default: hmask = 64'd0;
+        endcase
+    endfunction
+    function [OB-1:0] slot_of(input [63:0] r);
+        integer b;
+        begin
+            for (b = 0; b < OB; b = b + 1)
+                slot_of[b] = (REF_HASH != 0) ? ^(r & hmask(b)) : r[b];
+        end
+    endfunction
+
     // ---------------- input FIFO with bypass ----------------
     wire [REC_W-1:0] in_rec = {in_kind, in_side, in_ref, in_ref2, in_shares,
                                in_price, in_id, in_sof, in_eom};
@@ -92,7 +136,9 @@ module book_engine #(
     reg           we;
     reg  [OB-1:0] waddr;
     reg  [129:0]  wdata;
-    wire [OB-1:0] raddr = (st == S_RD) ? c_ref2[OB-1:0] : n_ref[OB-1:0];
+    wire [OB-1:0] c_slot  = slot_of(c_ref);
+    wire [OB-1:0] c_slot2 = slot_of(c_ref2);
+    wire [OB-1:0] raddr = (st == S_RD) ? c_slot2 : slot_of(n_ref);
     wire [129:0]  rdata;
     order_table #(.AW(OB), .W(130)) u_tab (
         .clk(clk), .we(we), .waddr(waddr), .wdata(wdata), .raddr(raddr), .rdata(rdata));
@@ -105,7 +151,7 @@ module book_engine #(
     wire        hit    = e_v && (e_ref == c_ref);
     wire [31:0] dec    = (c_sh < e_sh) ? c_sh : e_sh;
     wire [31:0] rem    = e_sh - dec;
-    wire        u2_free = !e_v || (c_ref2[OB-1:0] == c_ref[OB-1:0]);
+    wire        u2_free = !e_v || (c_slot2 == c_slot);
 
     // ---------------- price levels ----------------
     reg         lop_v, lop_add, lop_side;
@@ -125,7 +171,7 @@ module book_engine #(
     reg       done, coll_inc, miss_inc;
     always @* begin
         n_st = st; done = 1'b0; coll_inc = 1'b0; miss_inc = 1'b0;
-        we = 1'b0; waddr = c_ref[OB-1:0]; wdata = 130'd0;
+        we = 1'b0; waddr = c_slot; wdata = 130'd0;
         lop_v = 1'b0; lop_add = 1'b0; lop_side = 1'b0; lop_px = 32'd0; lop_q = 32'd0;
         case (st)
             S_IDLE: if (take) n_st = S_RD;
@@ -164,7 +210,7 @@ module book_engine #(
             S_U2: begin
                 n_st = S_IDLE;
                 done = 1'b1;
-                waddr = c_ref2[OB-1:0];
+                waddr = c_slot2;
                 if (u2_free) begin
                     we = 1'b1; wdata = {1'b1, c_ref2, rep_side, c_px, c_sh};
                     lop_v = 1'b1; lop_add = 1'b1; lop_side = rep_side;

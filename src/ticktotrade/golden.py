@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from . import mold, ouch
-from .book import HwBook, RefBook, event_from_msg
+from .book import HASH_XOR, HwBook, RefBook, event_from_msg
 from .strategy import ImbalanceStrategy, StrategyConfig
 
 
@@ -20,9 +20,9 @@ class GoldenResult:
 
 
 def run_golden(packets: list[bytes], cfg: StrategyConfig, order_bits: int = 12,
-               depth: int = 8) -> GoldenResult:
+               depth: int = 8, ref_hash: int = HASH_XOR) -> GoldenResult:
     res = GoldenResult()
-    book = HwBook(order_bits, depth)
+    book = HwBook(order_bits, depth, ref_hash)
     ref = RefBook()
     strat = ImbalanceStrategy(cfg)
     parse_err = 0

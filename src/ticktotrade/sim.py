@@ -17,6 +17,7 @@ class SimConfig:
     seed: int = 1
     order_bits: int = 12
     depth: int = 8
+    ref_hash: int = 1           # order-table index: 1 XOR hash, 0 low bits (REF_HASH)
     gap_prob: float = 0.1       # probability of an idle cycle before each beat
     ipg_max: int = 3            # idle cycles between packets (uniform 0..ipg_max)
     msgs_per_packet: int = 4
@@ -24,6 +25,7 @@ class SimConfig:
     filler_rate: float = 0.12
     unknown_ref_rate: float = 0.01
     target_live: int = 60
+    ref_stride: int = 1
     itch_file: str | None = None
     strategy: StrategyConfig = field(default_factory=StrategyConfig)
 
@@ -41,7 +43,7 @@ def make_packets(cfg: SimConfig):
                          tracked_locate=cfg.strategy.locate,
                          tracked_share=cfg.tracked_share, filler_rate=cfg.filler_rate,
                          unknown_ref_rate=cfg.unknown_ref_rate, target_live=cfg.target_live,
-                         msgs_per_packet=cfg.msgs_per_packet)
+                         msgs_per_packet=cfg.msgs_per_packet, ref_stride=cfg.ref_stride)
     return gen.generate(gcfg)
 
 
@@ -105,13 +107,14 @@ def run_packets(pkts: list[bytes], cfg: SimConfig, workdir: Path | None = None) 
     t0 = time.time()
     workdir = Path(workdir or rtl.BUILD_DIR / f"sim_seed{cfg.seed}")
     workdir.mkdir(parents=True, exist_ok=True)
-    g = golden.run_golden(pkts, cfg.strategy, cfg.order_bits, cfg.depth)
+    g = golden.run_golden(pkts, cfg.strategy, cfg.order_bits, cfg.depth, cfg.ref_hash)
     stim = bus.build_stimulus(pkts, random.Random(cfg.seed * 7919 + 1), cfg.gap_prob, cfg.ipg_max)
     stim_path = workdir / "stim.txt"
     out_path = workdir / "rtl_out.txt"
     stim.write(stim_path)
     t1 = time.time()
-    vvp = rtl.compile_tb("tb", {"ORDER_BITS": cfg.order_bits, "DEPTH": cfg.depth})
+    vvp = rtl.compile_tb("tb", {"ORDER_BITS": cfg.order_bits, "DEPTH": cfg.depth,
+                                "REF_HASH": cfg.ref_hash})
     s = cfg.strategy
     rtl.run_vvp(vvp, {"STIM": stim_path, "OUT": out_path, "LOCATE": s.locate,
                       "ENABLE": int(s.enable), "SHIFT": s.imb_shift, "SPREAD": s.max_spread,

@@ -16,6 +16,7 @@ module tb;
     parameter DEPTH      = 8;
     parameter FIFO_LOG2  = 3;
     parameter OQ_LOG2    = 3;
+    parameter REF_HASH   = 1;
 
     reg clk = 1'b0;
     always #1 clk = ~clk;
@@ -41,7 +42,7 @@ module tb;
     wire [31:0] cnt_evict, cnt_drop, cnt_ovf, cnt_orders, cnt_qovf;
 
     t2t_top #(.ORDER_BITS(ORDER_BITS), .DEPTH(DEPTH), .FIFO_LOG2(FIFO_LOG2),
-              .OQ_LOG2(OQ_LOG2)) dut (
+              .OQ_LOG2(OQ_LOG2), .REF_HASH(REF_HASH)) dut (
         .clk(clk), .rst(rst), .in_data(in_data), .in_keep(in_keep),
         .in_valid(in_valid), .in_last(in_last), .cfg_locate(cfg_locate),
         .cfg_enable(cfg_enable), .cfg_imb_shift(cfg_imb_shift),
