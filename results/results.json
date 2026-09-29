@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-09-28T22:45:09Z",
+ "generated_utc": "2026-09-29T15:47:13Z",
  "environment": {
   "python": "3.11.15",
   "iverilog": "Icarus Verilog version 12.0 (stable) ()"
@@ -27,14 +27,14 @@
     "pkts": 12109,
     "parse_err": 0,
     "relevant": 13129,
-    "collisions": 0,
-    "misses": 129,
-    "evictions": 239,
-    "drops": 280,
-    "orders": 564
+    "collisions": 8,
+    "misses": 146,
+    "evictions": 237,
+    "drops": 278,
+    "orders": 566
    },
    "fidelity": {
-    "bbo_match_frac": 0.9674004113032219,
+    "bbo_match_frac": 0.9543758092771727,
     "book_updates": 13129,
     "ref_live_orders_end": 68,
     "hw_live_orders_end": 68
@@ -64,23 +64,23 @@
     "h": 258
    },
    "snapshots_compared": 13129,
-   "orders_compared": 564,
+   "orders_compared": 566,
    "latency_pkt_cycles": {
     "min": 9,
     "median": 15.0,
     "max": 31,
-    "mean": 15.457,
-    "n": 564
+    "mean": 15.465,
+    "n": 566
    },
    "latency_msg_cycles": {
     "min": 4,
     "median": 4.0,
     "max": 7,
-    "mean": 4.103,
-    "n": 564
+    "mean": 4.102,
+    "n": 566
    },
    "latency_msg_hist": {
-    "4": 511,
+    "4": 513,
     "5": 49,
     "6": 3,
     "7": 1
@@ -101,6 +101,7 @@
     "seed": 1,
     "order_bits": 12,
     "depth": 8,
+    "ref_hash": 1,
     "gap_prob": 0.1,
     "ipg_max": 3,
     "msgs_per_packet": 4,
@@ -108,6 +109,7 @@
     "filler_rate": 0.12,
     "unknown_ref_rate": 0.01,
     "target_live": 60,
+    "ref_stride": 1,
     "itch_file": null,
     "strategy": {
      "locate": 1,
@@ -120,8 +122,8 @@
     }
    },
    "wall_seconds": {
-    "golden_and_stimulus": 0.38,
-    "rtl_sim": 19.08
+    "golden_and_stimulus": 0.53,
+    "rtl_sim": 21.33
    },
    "rtl_counters": {
     "lines": 191273,
@@ -130,13 +132,13 @@
     "pkts": 12109,
     "parse_err": 0,
     "relevant": 13129,
-    "collisions": 0,
-    "misses": 129,
-    "evictions": 239,
-    "drops": 280,
+    "collisions": 8,
+    "misses": 146,
+    "evictions": 237,
+    "drops": 278,
     "fifo_ovf": 0,
     "fifo_max": 1,
-    "orders": 564,
+    "orders": 566,
     "order_q_ovf": 0,
     "lat_min": 9,
     "lat_max": 31,
@@ -215,6 +217,7 @@
     "seed": 2,
     "order_bits": 12,
     "depth": 8,
+    "ref_hash": 1,
     "gap_prob": 0.0,
     "ipg_max": 0,
     "msgs_per_packet": 40,
@@ -222,6 +225,7 @@
     "filler_rate": 0.0,
     "unknown_ref_rate": 0.01,
     "target_live": 60,
+    "ref_stride": 1,
     "itch_file": null,
     "strategy": {
      "locate": 1,
@@ -234,8 +238,8 @@
     }
    },
    "wall_seconds": {
-    "golden_and_stimulus": 0.36,
-    "rtl_sim": 10.52
+    "golden_and_stimulus": 0.39,
+    "rtl_sim": 11.91
    },
    "rtl_counters": {
     "lines": 82821,
@@ -302,6 +306,7 @@
     "seed": 3,
     "order_bits": 12,
     "depth": 8,
+    "ref_hash": 1,
     "gap_prob": 0.0,
     "ipg_max": 0,
     "msgs_per_packet": 4,
@@ -309,6 +314,7 @@
     "filler_rate": 0.12,
     "unknown_ref_rate": 0.01,
     "target_live": 60,
+    "ref_stride": 1,
     "itch_file": null,
     "strategy": {
      "locate": 1,
@@ -321,8 +327,8 @@
     }
    },
    "wall_seconds": {
-    "golden_and_stimulus": 0.04,
-    "rtl_sim": 4.06
+    "golden_and_stimulus": 0.06,
+    "rtl_sim": 5.02
    },
    "rtl_counters": {
     "lines": 35602,
@@ -390,6 +396,7 @@
     "seed": 4,
     "order_bits": 12,
     "depth": 8,
+    "ref_hash": 1,
     "gap_prob": 0.0,
     "ipg_max": 0,
     "msgs_per_packet": 4,
@@ -397,6 +404,7 @@
     "filler_rate": 0.12,
     "unknown_ref_rate": 0.01,
     "target_live": 60,
+    "ref_stride": 1,
     "itch_file": null,
     "strategy": {
      "locate": 1,
@@ -409,8 +417,8 @@
     }
    },
    "wall_seconds": {
-    "golden_and_stimulus": 0.18,
-    "rtl_sim": 9.79
+    "golden_and_stimulus": 0.31,
+    "rtl_sim": 11.23
    },
    "rtl_counters": {
     "lines": 71003,
@@ -440,55 +448,55 @@
     "pass": true,
     "errors": [],
     "snapshots": 1739,
-    "orders": 67,
-    "collisions": 292,
-    "misses": 524,
-    "evictions": 40,
-    "drops": 61
+    "orders": 63,
+    "collisions": 303,
+    "misses": 559,
+    "evictions": 38,
+    "drops": 64
    },
    {
     "seed": 102,
     "pass": true,
     "errors": [],
     "snapshots": 1724,
-    "orders": 55,
-    "collisions": 291,
-    "misses": 504,
-    "evictions": 42,
-    "drops": 76
+    "orders": 62,
+    "collisions": 264,
+    "misses": 501,
+    "evictions": 43,
+    "drops": 86
    },
    {
     "seed": 103,
     "pass": true,
     "errors": [],
     "snapshots": 1802,
-    "orders": 67,
-    "collisions": 303,
-    "misses": 563,
-    "evictions": 33,
-    "drops": 65
+    "orders": 74,
+    "collisions": 307,
+    "misses": 574,
+    "evictions": 32,
+    "drops": 61
    },
    {
     "seed": 104,
     "pass": true,
     "errors": [],
     "snapshots": 1799,
-    "orders": 54,
-    "collisions": 315,
-    "misses": 517,
+    "orders": 47,
+    "collisions": 340,
+    "misses": 544,
     "evictions": 35,
-    "drops": 90
+    "drops": 75
    },
    {
     "seed": 105,
     "pass": true,
     "errors": [],
     "snapshots": 1799,
-    "orders": 56,
-    "collisions": 296,
-    "misses": 536,
-    "evictions": 47,
-    "drops": 79
+    "orders": 54,
+    "collisions": 302,
+    "misses": 566,
+    "evictions": 55,
+    "drops": 91
    },
    {
     "seed": 106,
@@ -496,32 +504,32 @@
     "errors": [],
     "snapshots": 1756,
     "orders": 67,
-    "collisions": 309,
-    "misses": 513,
-    "evictions": 53,
-    "drops": 71
+    "collisions": 302,
+    "misses": 507,
+    "evictions": 50,
+    "drops": 85
    },
    {
     "seed": 107,
     "pass": true,
     "errors": [],
     "snapshots": 1792,
-    "orders": 69,
-    "collisions": 313,
-    "misses": 538,
-    "evictions": 39,
-    "drops": 58
+    "orders": 62,
+    "collisions": 298,
+    "misses": 535,
+    "evictions": 53,
+    "drops": 71
    },
    {
     "seed": 108,
     "pass": true,
     "errors": [],
     "snapshots": 1723,
-    "orders": 72,
-    "collisions": 291,
-    "misses": 477,
-    "evictions": 48,
-    "drops": 82
+    "orders": 62,
+    "collisions": 313,
+    "misses": 504,
+    "evictions": 52,
+    "drops": 73
    }
   ],
   "directed_edge_cases": {
@@ -574,11 +582,11 @@
    "DEPTH": 8
   },
   "total": {
-   "LUT": 6919,
+   "LUT": 7421,
    "FF": 3203,
    "CARRY4": 660,
-   "MUXF7": 569,
-   "MUXF8": 203,
+   "MUXF7": 583,
+   "MUXF8": 195,
    "LUTRAM_RAM32M": 76,
    "BRAM_RAMB36E1": 15,
    "BRAM_RAMB18E1": 0
@@ -593,11 +601,11 @@
     "FF": 1040
    },
    "book_engine": {
-    "LUT": 1101,
+    "LUT": 1602,
     "FF": 589
    },
    "itch_parser": {
-    "LUT": 1559,
+    "LUT": 1560,
     "FF": 941
    },
    "msg_decode": {
@@ -617,11 +625,11 @@
     "FF": 32
    }
   },
-  "seconds": 97.5
+  "seconds": 104.7
  },
  "mutation": {
-  "mutants": 16,
-  "killed": 16,
+  "mutants": 17,
+  "killed": 17,
   "results": [
    {
     "file": "itch_parser.v",
@@ -681,31 +689,37 @@
     "file": "book_engine.v",
     "desc": "no clamp on over-execution",
     "status": "KILLED",
-    "by": "directed: order table mismatch (1 entries differ), e.g. [(2, (2, 1, 100500, 4294966445))]"
+    "by": "directed: order table mismatch (1 entries differ), e.g. [(2, (43, 1, 100500, 4294966445))]"
    },
    {
     "file": "book_engine.v",
     "desc": "same-slot replace read-before-write hazard",
     "status": "KILLED",
-    "by": "random: book mismatch at msg 123/123: golden bids=[(1281000, 2000), (1280900, 760), (1280700, 400), (1280600, 300)] asks=[(1281100, 204), (1"
+    "by": "random: book mismatch at msg 832/832: golden bids=[(1280900, 1401), (1280800, 100), (1280700, 3100), (1280600, 400)] asks=[(1281100, 1753), "
+   },
+   {
+    "file": "book_engine.v",
+    "desc": "order-table index ignores the reference hash",
+    "status": "KILLED",
+    "by": "random: book mismatch at msg 121/121: golden bids=[(1281000, 2000), (1280900, 760), (1280700, 400), (1280600, 300)] asks=[(1281100, 204), (1"
    },
    {
     "file": "book_engine.v",
     "desc": "add overwrites colliding order",
     "status": "KILLED",
-    "by": "random: book mismatch at msg 121/121: golden bids=[(1281000, 2000), (1280900, 760), (1280700, 400), (1280600, 300)] asks=[(1281100, 204), (1"
+    "by": "random: book mismatch at msg 175/175: golden bids=[(1280900, 760), (1280700, 1700), (1280500, 1000), (1280300, 100)] asks=[(1281100, 1072), "
    },
    {
     "file": "strategy.v",
     "desc": "sell not edge-triggered",
     "status": "KILLED",
-    "by": "random: order count golden=41 rtl=320"
+    "by": "random: order count golden=45 rtl=244"
    },
    {
     "file": "strategy.v",
     "desc": "max_qty cap ignored",
     "status": "KILLED",
-    "by": "random: OUCH mismatch msg 199/199: golden=4f545430303030303030303030303453000001f44141504c2020202000138b84000000005454524459504e000000004e4e"
+    "by": "random: OUCH mismatch msg 210/210: golden=4f545430303030303030303030303453000001f44141504c2020202000138b84000000005454524459504e000000004e4e"
    },
    {
     "file": "ouch_tx.v",
